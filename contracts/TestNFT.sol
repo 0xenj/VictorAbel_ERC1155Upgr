@@ -1,34 +1,49 @@
-// SPDX-License-Identifier: UNLICENSED
+//SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-// Uncomment this line to use console.log
-// import "hardhat/console.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC1155/ERC1155Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
-contract Lock {
-    uint public unlockTime;
-    address payable public owner;
+contract TestNFT is
+    Initializable,
+    UUPSUpgradeable,
+    ERC1155Upgradeable,
+    OwnableUpgradeable
+{
+    mapping(uint256 => string) public tokenURI;
+    uint256 public tokenId;
 
-    event Withdrawal(uint amount, uint when);
-
-    constructor(uint _unlockTime) payable {
-        require(
-            block.timestamp < _unlockTime,
-            "Unlock time should be in the future"
-        );
-
-        unlockTime = _unlockTime;
-        owner = payable(msg.sender);
+    function initialize() public initializer {
+        __ERC1155_init("");
+        __Ownable_init();
+        __UUPSUpgradeable_init();
     }
 
-    function withdraw() public {
-        // Uncomment this line, and the import of "hardhat/console.sol", to print a log in your terminal
-        // console.log("Unlock time is %o and block timestamp is %o", unlockTime, block.timestamp);
+    function _authorizeUpgrade(
+        address _newImplementation
+    ) internal override onlyOwner {}
 
-        require(block.timestamp >= unlockTime, "You can't withdraw yet");
-        require(msg.sender == owner, "You aren't the owner");
+    constructor() {
+        _disableInitializers();
+    }
 
-        emit Withdrawal(address(this).balance, block.timestamp);
+    function mint(
+        uint256 amount,
+        string memory _tokenURI,
+        bytes memory data
+    ) public returns (uint256) {
+        uint256 _tokenId = tokenId;
+        tokenURI[_tokenId] = _tokenURI;
+        _mint(msg.sender, _tokenId, amount, data);
+        tokenId++;
+        return _tokenId;
+    }
 
-        owner.transfer(address(this).balance);
+    function uri(
+        uint256 _tokenId
+    ) public view override returns (string memory) {
+        return tokenURI[_tokenId];
     }
 }
