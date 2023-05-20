@@ -47,6 +47,7 @@ contract TestNFT is
         bytes memory data
     ) public virtual onlyOwner {
         _mintBatch(_msgSender(), _ids, _amounts, data);
+        tokenId = _ids.length;
     }
 
     function tokenUri(
@@ -56,6 +57,7 @@ contract TestNFT is
             string(
                 abi.encodePacked(
                     _baseURI,
+                    "/",
                     StringsUpgradeable.toString(_tokenId),
                     ".json"
                 )
