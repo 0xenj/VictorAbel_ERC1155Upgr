@@ -5,15 +5,22 @@ import "@openzeppelin/contracts-upgradeable/token/ERC1155/ERC1155Upgradeable.sol
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 
+/// @custom:security-contact enzo.jakobasch@gmail.com
 contract TestNFT is
     Initializable,
     UUPSUpgradeable,
     ERC1155Upgradeable,
     OwnableUpgradeable
 {
-    mapping(uint256 => string) public tokenURI;
+    using StringsUpgradeable for uint256;
     uint256 public tokenId;
+
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
 
     function initialize() public initializer {
         __ERC1155_init("");
@@ -22,28 +29,38 @@ contract TestNFT is
     }
 
     function _authorizeUpgrade(
-        address _newImplementation
+        address newImplementation
     ) internal override onlyOwner {}
 
-    constructor() {
-        _disableInitializers();
+    function setURI(string memory newUri) public virtual onlyOwner {
+        _setURI(newUri);
     }
 
-    function mint(
-        uint256 amount,
-        string memory _tokenURI,
+    function mintBatch(
+        uint256[] calldata _ids,
+        uint256[] calldata _amounts,
         bytes memory data
-    ) public returns (uint256) {
+    ) public virtual onlyOwner returns (uint256) {
+        uint256 length = _ids.length;
         uint256 _tokenId = tokenId;
-        tokenURI[_tokenId] = _tokenURI;
-        _mint(msg.sender, _tokenId, amount, data);
-        tokenId++;
-        return _tokenId;
+        for (uint256 i = 0; i < length; ++i) {
+            _mintBatch(_msgSender(), _ids[i], _amounts, data);
+            ++_tokenId;
+        }
+        tokenId = _tokenId;
+        return tokenId;
     }
 
-    function uri(
+    function tokenUri(
         uint256 _tokenId
-    ) public view override returns (string memory) {
-        return tokenURI[_tokenId];
+    ) external view virtual returns (string memory) {
+        return
+            string(
+                abi.encodePacked(
+                    uri(),
+                    StringsUpgradeable.toString(_tokenId),
+                    ".json"
+                )
+            );
     }
 }
