@@ -16,6 +16,7 @@ contract TestNFT is
 {
     using StringsUpgradeable for uint256;
     uint256 public tokenId;
+    string public _baseURI;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -32,23 +33,20 @@ contract TestNFT is
         address newImplementation
     ) internal override onlyOwner {}
 
-    function setURI(string memory newUri) public virtual onlyOwner {
-        _setURI(newUri);
+    function setURI(string memory newURI) public virtual onlyOwner {
+        _baseURI = newURI;
+    }
+
+    function baseURI() public virtual returns (string memory) {
+        return _baseURI;
     }
 
     function mintBatch(
         uint256[] calldata _ids,
         uint256[] calldata _amounts,
         bytes memory data
-    ) public virtual onlyOwner returns (uint256) {
-        uint256 length = _ids.length;
-        uint256 _tokenId = tokenId;
-        for (uint256 i = 0; i < length; ++i) {
-            _mintBatch(_msgSender(), _ids[i], _amounts, data);
-            ++_tokenId;
-        }
-        tokenId = _tokenId;
-        return tokenId;
+    ) public virtual onlyOwner {
+        _mintBatch(_msgSender(), _ids, _amounts, data);
     }
 
     function tokenUri(
@@ -57,7 +55,7 @@ contract TestNFT is
         return
             string(
                 abi.encodePacked(
-                    uri(),
+                    _baseURI,
                     StringsUpgradeable.toString(_tokenId),
                     ".json"
                 )
