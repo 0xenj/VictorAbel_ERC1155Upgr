@@ -5,7 +5,7 @@ const path = require("path");
 async function main() {
   const currentFolder = path.resolve(__dirname, "../ipfs/");
   const metadata =
-    "ipfs://bafybeiardgy2zsoerwqzcfquxdkqsavz2q3rrtlepjp6q6euppsojygyjm";
+    "ipfs://bafybeifekbqmc5tipfoil6by5ybjr7ml6bblt5mdx6y5py6mrt4j7axzay";
 
   console.log("currentFolder", currentFolder);
   if (fs.existsSync(currentFolder)) {
