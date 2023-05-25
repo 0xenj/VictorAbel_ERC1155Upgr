@@ -11,13 +11,31 @@ async function main() {
   if (fs.existsSync(currentFolder)) {
     for (let i = 0; i < 100; i++) {
       const data = {
-        name: `(Categories) #`,
+        name: `Categories #`,
         created_by: "Victor Abel",
-        description: "(Nom de l'oeuvre) - Collection ARTbres&Forêts 1000/10000",
+        description: "Nom de l'oeuvre - Collection ARTbres&Forêts 1000/10000",
         image: `${metadata}/${i}.png`,
-        print_file: "",
+        print_file: "lien dropbox",
         external_url: "https://artbres-forets.com/",
-        type: 1,
+        attributes: [
+          {
+            trait_type: "Artist",
+            value: "Victor Abel",
+          },
+          {
+            trait_type: "Génération",
+            value: 0,
+          },
+          {
+            trait_type: "Catégorie",
+            value: 1,
+          },
+        ],
+        image_details: {
+          format: "PNG",
+          width: 2048,
+          height: 2048,
+        },
       };
 
       console.log(
