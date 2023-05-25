@@ -9,13 +9,15 @@ async function main() {
 
   console.log("currentFolder", currentFolder);
   if (fs.existsSync(currentFolder)) {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 100; i++) {
       const data = {
-        title: `ARTbres&Foret #${i}`,
-        description: "Victor Abel GAGNE - Collection 1",
-        image: `${metadata}/${i}.jpg`,
+        name: `(Categories) #`,
+        created_by: "Victor Abel",
+        description: "(Nom de l'oeuvre) - Collection ARTbres&Forêts 1000/10000",
+        image: `${metadata}/${i}.png`,
+        print_file: "",
+        external_url: "https://artbres-forets.com/",
         type: 1,
-        date: Date.now(),
       };
 
       console.log(
@@ -29,8 +31,7 @@ async function main() {
         JSON.stringify(data, null, 2)
       );
     }
-  } else
-    throw new Error("Folder metaData/ and metaData/metadata does not exist");
+  } else throw new Error("Folder ipfs/ and ipfs/metadata does not exist");
 
   console.log("\x1b[32m", "Done building ABI's", "\x1b[0m");
 }
