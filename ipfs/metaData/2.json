@@ -1,8 +1,8 @@
 {
-  "name": "Categories #",
+  "name": "Combat intérieur #1",
   "created_by": "Victor Abel",
   "description": "À partir du moment où tu me l'as dit, je m'en suis souvenu - Collection ARTbres&Forêts 1000/10000",
-  "image": "ipfs://bafybeifekbqmc5tipfoil6by5ybjr7ml6bblt5mdx6y5py6mrt4j7axzay/2.png",
+  "image": "ipfs://bafybeifekbqmc5tipfoil6by5ybjr7ml6bblt5mdx6y5py6mrt4j7axzay/8-1.png",
   "print_file": "lien dropbox",
   "external_url": "https://artbres-forets.com/",
   "attributes": [
@@ -12,11 +12,11 @@
     },
     {
       "trait_type": "Génération",
-      "value": 0
+      "value": 1
     },
     {
       "trait_type": "Catégorie",
-      "value": 1
+      "value": 8
     }
   ],
   "image_details": {

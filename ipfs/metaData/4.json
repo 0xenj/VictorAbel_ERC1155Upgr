@@ -1,8 +1,8 @@
 {
-  "name": "Categories #",
+  "name": "Combat intérieur #2",
   "created_by": "Victor Abel",
   "description": "Amalgame conscient de rêves dépourvus de sens - Collection ARTbres&Forêts 1000/10000",
-  "image": "ipfs://bafybeifekbqmc5tipfoil6by5ybjr7ml6bblt5mdx6y5py6mrt4j7axzay/4.png",
+  "image": "ipfs://bafybeifekbqmc5tipfoil6by5ybjr7ml6bblt5mdx6y5py6mrt4j7axzay/8-2.png",
   "print_file": "lien dropbox",
   "external_url": "https://artbres-forets.com/",
   "attributes": [
@@ -12,11 +12,11 @@
     },
     {
       "trait_type": "Génération",
-      "value": 0
+      "value": 1
     },
     {
       "trait_type": "Catégorie",
-      "value": 1
+      "value": 8
     }
   ],
   "image_details": {
