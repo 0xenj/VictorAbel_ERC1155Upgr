@@ -1,0 +1,27 @@
+{
+  "name": "Categories #",
+  "created_by": "Victor Abel",
+  "description": "Nom de l'oeuvre - Collection ARTbres&Forêts 1000/10000",
+  "image": "ipfs://bafybeifekbqmc5tipfoil6by5ybjr7ml6bblt5mdx6y5py6mrt4j7axzay/91.png",
+  "print_file": "lien dropbox",
+  "external_url": "https://artbres-forets.com/",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Victor Abel"
+    },
+    {
+      "trait_type": "Génération",
+      "value": 0
+    },
+    {
+      "trait_type": "Catégorie",
+      "value": 1
+    }
+  ],
+  "image_details": {
+    "format": "PNG",
+    "width": 2048,
+    "height": 2048
+  }
+}
