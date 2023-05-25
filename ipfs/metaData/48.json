@@ -1,8 +1,8 @@
 {
-  "name": "Categories #",
+  "name": "Inconscient collectif #5",
   "created_by": "Victor Abel",
   "description": "Marche en forêt - Collection ARTbres&Forêts 1000/10000",
-  "image": "ipfs://bafybeifekbqmc5tipfoil6by5ybjr7ml6bblt5mdx6y5py6mrt4j7axzay/48.png",
+  "image": "ipfs://bafybeifekbqmc5tipfoil6by5ybjr7ml6bblt5mdx6y5py6mrt4j7axzay/7-5.png",
   "print_file": "lien dropbox",
   "external_url": "https://artbres-forets.com/",
   "attributes": [
@@ -12,11 +12,11 @@
     },
     {
       "trait_type": "Génération",
-      "value": 0
+      "value": 1
     },
     {
       "trait_type": "Catégorie",
-      "value": 1
+      "value": 7
     }
   ],
   "image_details": {
