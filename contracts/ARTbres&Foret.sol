@@ -13,6 +13,12 @@ import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 /*
 ________________________________________________________________________________
 
+'||'  '|'  ||            .                          |     '||              '||  
+ '|.  .'  ...    ....  .||.    ...   ... ..        |||     || ...    ....   ||  
+  ||  |    ||  .|   ''  ||   .|  '|.  ||' ''      |  ||    ||'  || .|...||  ||  
+   |||     ||  ||       ||   ||   ||  ||         .''''|.   ||    | ||       ||  
+    |     .||.  '|...'  '|.'  '|..|' .||.       .|.  .||.  '|...'   '|...' .||. 
+                                                                                     
 ________________________________________________________________________________
 
 _________________________.,_____________________________________________________
@@ -78,10 +84,6 @@ ____________________]▌__________________________________▓___________________
 _______________ _╓╖╥@▓m╥╖~__________________________``"^^^"``___________________
 
 ________________________ _______________________________________________________
-
-_____________________________ __ ______  _______________________________________
-
-________________________________________________________________________________
 */
 
 /// @custom:security-contact enzo.jakobasch@gmail.com
@@ -92,7 +94,9 @@ contract ARTbres_Forets is
     OwnableUpgradeable
 {
     using StringsUpgradeable for uint256;
-    uint256 public totalSupply;
+    uint16 private totalSupply;
+    uint16 private totalSupplyId;
+    uint16 private totalSupplyPerId;
     uint16 private constant MAXSUPPLY = 10000;
     uint16 private constant MAXSUPPLY_V1 = 1000;
     string private _baseURI;
@@ -125,20 +129,53 @@ contract ARTbres_Forets is
         return _ownerOf(_tokenId) != address(0);
     }
 
-    function name() external view virtual returns (string memory) {
+    /**
+     * @dev Return the collection's name
+     */
+    function name() external view returns (string memory) {
         return NAME;
     }
 
-    function symbol() external view virtal returns (string memory) {
+    /**
+     * @dev Return the collection's symbol
+     */
+    function symbol() external view returns (string memory) {
         return SYMBOL;
     }
 
-    function maxSupply() public view virtual returns (uint256) {
+    /**
+     * @dev Return the total maximum supply of the collection
+     */
+    function maxSupply() public view returns (uint256) {
         return MAXSUPPLY;
     }
 
-    function maxSupply_V1() public view virtual returns (uint256) {
+    /**
+     * @dev Return the maximum supply of V1
+     */
+    function maxSupply_V1() public view returns (uint256) {
         return MAXSUPPLY_V1;
+    }
+
+    /**
+     * @dev Return the total supply
+     */
+    function totalSupply() public view returns (uint256) {
+        return totalSupply;
+    }
+
+    /**
+     * @dev Return the total tokenId supply
+     */
+    function totalSupplyId() public view returns (uint256) {
+        return totalSupplyId;
+    }
+
+    /**
+     * @dev Return the total supply per tokenId
+     */
+    function totalSupplyPerId() public view returns (uint256) {
+        return totalSupplyPerId;
     }
 
     /**
@@ -181,6 +218,11 @@ contract ARTbres_Forets is
     function _extensionURI() internal view virtual returns (string memory) {
         return ".json";
     }
+
+    /**
+     * @dev Disable uri() function
+     */
+    function uri() public view virtual override {}
 
     /**
      * @dev Return tokenURI
