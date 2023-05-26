@@ -11,6 +11,15 @@ module.exports = {
       url: process.env.RPC_MUMBAI,
       accounts: [process.env.PRIVATE_KEY_MUMBAI],
     },
+    polygon: {
+      url: process.env.RPC_POLYGON,
+      accounts: [process.env.PRIVATE_KEY_POLYGON],
+    },
+  },
+  etherscan: {
+    apiKey: {
+      polygon: process.env.API_KEY_POLYGON,
+    },
   },
   solidity: {
     version: "0.8.9",
@@ -20,8 +29,5 @@ module.exports = {
         runs: 200,
       },
     },
-  },
-  mocha: {
-    timeout: 200000,
   },
 };

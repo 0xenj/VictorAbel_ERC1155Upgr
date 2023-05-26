@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "./TestNFT.sol";
+import "./ARTbres&Foret.sol";
 
 /// @custom:security-contact enzo.jakobasch@gmail.com
 contract TestNFTV2 is TestNFT {
