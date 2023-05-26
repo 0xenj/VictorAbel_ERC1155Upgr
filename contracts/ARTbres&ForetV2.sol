@@ -4,7 +4,7 @@ pragma solidity ^0.8.9;
 import "./ARTbres&Foret.sol";
 
 /// @custom:security-contact enzo.jakobasch@gmail.com
-contract TestNFTV2 is TestNFT {
+contract ARTbres_ForetsV2 is TestNFT {
     function mintBatch(
         uint256[] calldata _ids,
         uint256[] calldata _amounts,
@@ -35,5 +35,15 @@ contract TestNFTV2 is TestNFT {
                     ".json"
                 )
             );
+    }
+
+    /**
+     * @dev Allow owner to withdraw any ether sent to this contract
+     *  - Verify that the caller is the owner
+     */
+    function withdrawEther() external virtual onlyOwner returns (bool success) {
+        (success, ) = payable(msg.sender).call{value: address(this).balance}(
+            ""
+        );
     }
 }
