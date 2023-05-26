@@ -94,11 +94,13 @@ contract ARTbres_Forets is
     OwnableUpgradeable
 {
     using StringsUpgradeable for uint256;
-    uint16 private totalSupply;
-    uint16 private totalSupplyId;
-    uint16 private totalSupplyPerId;
-    uint16 private constant MAXSUPPLY = 10000;
-    uint16 private constant MAXSUPPLY_V1 = 1000;
+    uint8 private version = 1;
+    uint16 private totalSupplyId = 0;
+    uint16 private constant TOTAL_SUPPLY_PER_ID = 10;
+    uint16 private constant MAX_TOTAL_SUPPLY = 10000;
+    uint16 private constant MAX_TOTAL_SUPPLY_V1 = 1000;
+    uint16 private constant MAX_SUPPLY_ID = 1000;
+    uint16 private constant MAX_SUPPLY_ID_V1 = 100;
     string private _baseURI;
     string private _contractURI;
     string private constant NAME = "Artbres & Forets Collection";
@@ -127,6 +129,13 @@ contract ARTbres_Forets is
      */
     function _exists(uint256 _tokenId) internal view virtual returns (bool) {
         return _ownerOf(_tokenId) != address(0);
+    }
+
+    /**
+     * @dev Return the contract's version
+     */
+    function version() external view returns (uint256) {
+        return version;
     }
 
     /**
@@ -161,7 +170,7 @@ contract ARTbres_Forets is
      * @dev Return the total supply
      */
     function totalSupply() public view returns (uint256) {
-        return totalSupply;
+        return (totalSupplyId * TOTAL_SUPPLY_PER_ID);
     }
 
     /**
@@ -175,7 +184,7 @@ contract ARTbres_Forets is
      * @dev Return the total supply per tokenId
      */
     function totalSupplyPerId() public view returns (uint256) {
-        return totalSupplyPerId;
+        return TOTAL_SUPPLY_PER_ID;
     }
 
     /**
@@ -243,6 +252,22 @@ contract ARTbres_Forets is
     }
 
     /**
+     * @dev Main mint - external function
+     * @param _ids - number of tokenId to mint
+     * @param _amounts - number of each tokenId to mint
+     * @param data - data
+     *  - Verify that the caller is the owner
+     *  - Verify that total supply + quantity is less than maxSupply
+     *  - Mint the token
+     */
+    function mint(bytes memory data) external virtual onlyOwner {
+        uint256 _nextId = totalSupplyId + 1;
+        require(_nextId <= MAXSUPPLY_V1);
+        totalSupplyId = _nextId;
+        _mint(_msgSender(), _nextId, TOTAL_SUPPLY_PER_ID, data);
+    }
+
+    /**
      * @dev Main mintBatch - external function
      * @param _ids - array of number of tokenId to mint
      * @param _amounts - array of number of each tokenId to mint
@@ -252,31 +277,14 @@ contract ARTbres_Forets is
      *  - Mint tokens
      */
     function mintBatch(
-        uint256[] calldata _ids,
-        uint256[] calldata _amounts,
+        uint256 _ids,
+        uint256 _amounts,
         bytes memory data
     ) external virtual onlyOwner {
-        uint16 number = _ids.length;
+        require(totalSupplyId + 1 <= MAXSUPPLY_V1);
+        totalSupplyId = _nextId;
         require(+number <= maxSupply, "Max supply exceeded");
         totalSupply += number;
-        _mintBatch(_msgSender(), _ids, _amounts, data);
-    }
-
-    /**
-     * @dev Main mint - external function
-     * @param _ids - number of tokenId to mint
-     * @param _amounts - number of each tokenId to mint
-     * @param data - data
-     *  - Verify that the caller is the owner
-     *  - Verify that total supply + quantity is less than maxSupply
-     *  - Mint the token
-     */
-    function mint(
-        uint256 calldata _ids,
-        uint256 calldata _amounts,
-        bytes memory data
-    ) external virtual onlyOwner {
-        ++totalSupply;
-        _mint(_msgSender(), _ids, _amounts, data);
+        _mintBatch(_msgSender(), _ids, TOTAL_SUPPLY_PER_ID, data);
     }
 }
