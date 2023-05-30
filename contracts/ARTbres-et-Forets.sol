@@ -275,10 +275,11 @@ contract ARTbres_Forets is
      *  - Mint the token
      */
     function mint(bytes memory data) external virtual onlyOwner {
-        uint16 _nextId = totalSupplyId() + 1;
-        require(_nextId <= MAX_SUPPLY_ID_V1, "Max supply exceeded");
+        uint16 _tokenId = totalSupplyId();
+        uint16 _nextId = _tokenId + 1;
+        require(_nextId <= MAX_SUPPLY_ID_V1 - 1, "Max supply exceeded");
         _totalSupplyId = _nextId;
-        _mint(_msgSender(), _nextId, TOTAL_SUPPLY_PER_ID, data);
+        _mint(_msgSender(), _tokenId, TOTAL_SUPPLY_PER_ID, data);
     }
 
     /**
@@ -296,7 +297,7 @@ contract ARTbres_Forets is
         uint256[] memory _idsBatch;
         uint256[] memory _amountsBatch;
         uint16 _nextId = _totalSupplyId + _ids;
-        require(_nextId <= MAX_SUPPLY_ID_V1, "Max supply exceeded");
+        require(_nextId <= MAX_SUPPLY_ID_V1 - 1, "Max supply exceeded");
         _totalSupplyId += _nextId;
         for (uint16 i = 1; i <= _ids; ++i) {
             _idsBatch[i] = _totalSupplyId + i;
@@ -316,4 +317,11 @@ contract ARTbres_Forets is
             ""
         );
     }
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[47] private __gap;
 }
