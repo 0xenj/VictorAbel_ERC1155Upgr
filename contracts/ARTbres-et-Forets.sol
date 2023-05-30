@@ -94,8 +94,8 @@ contract ARTbres_Forets is
     OwnableUpgradeable
 {
     using StringsUpgradeable for uint256;
-    uint8 private version = 1;
-    uint16 private totalSupplyId = 0;
+    uint8 private constant VERSION = 1;
+    uint16 private totalSupplyId;
     uint16 private constant TOTAL_SUPPLY_PER_ID = 10;
     uint16 private constant MAX_TOTAL_SUPPLY = 10000;
     uint16 private constant MAX_TOTAL_SUPPLY_V1 = 1000;
@@ -128,14 +128,14 @@ contract ARTbres_Forets is
      * and stop existing when they are burned (`_burn`).
      */
     function _exists(uint256 _tokenId) internal view virtual returns (bool) {
-        return _ownerOf(_tokenId) != address(0);
+        return _tokenId <= totalSupplyId;
     }
 
     /**
      * @dev Return the contract's version
      */
-    function version() external view returns (uint256) {
-        return version;
+    function version() external view returns (uint8) {
+        return VERSION;
     }
 
     /**
@@ -155,35 +155,35 @@ contract ARTbres_Forets is
     /**
      * @dev Return the total maximum supply of the collection
      */
-    function maxSupply() public view returns (uint256) {
-        return MAXSUPPLY;
+    function maxSupply() public view returns (uint16) {
+        return MAX_TOTAL_SUPPLY;
     }
 
     /**
      * @dev Return the maximum supply of V1
      */
-    function maxSupply_V1() public view returns (uint256) {
-        return MAXSUPPLY_V1;
+    function maxSupplyId_V1() public view returns (uint16) {
+        return MAX_SUPPLY_ID_V1;
     }
 
     /**
      * @dev Return the total supply
      */
-    function totalSupply() public view returns (uint256) {
+    function totalSupply() public view returns (uint16) {
         return (totalSupplyId * TOTAL_SUPPLY_PER_ID);
     }
 
     /**
      * @dev Return the total tokenId supply
      */
-    function totalSupplyId() public view returns (uint256) {
+    function totalSupplyId() public view returns (uint16) {
         return totalSupplyId;
     }
 
     /**
-     * @dev Return the total supply per tokenId
+     * @dev Return the supply per tokenId
      */
-    function totalSupplyPerId() public view returns (uint256) {
+    function totalSupplyPerId() public view returns (uint16) {
         return TOTAL_SUPPLY_PER_ID;
     }
 
@@ -207,7 +207,7 @@ contract ARTbres_Forets is
 
     /**
      * @dev Allow to set base URI
-     * @param newBaseURI - IPFS pointing to the new base URI file
+     * @param newURI - IPFS pointing to the new base URI file
      *  - Verify that the caller is the owner
      */
     function setBaseURI(string calldata newURI) external virtual onlyOwner {
@@ -231,7 +231,9 @@ contract ARTbres_Forets is
     /**
      * @dev Disable uri() function
      */
-    function uri() public view virtual override {}
+    function uri(
+        uint256 tokenId
+    ) public view virtual override returns (string memory) {}
 
     /**
      * @dev Return tokenURI
@@ -253,8 +255,6 @@ contract ARTbres_Forets is
 
     /**
      * @dev Main mint - external function
-     * @param _ids - number of tokenId to mint
-     * @param _amounts - number of each tokenId to mint
      * @param data - data
      *  - Verify that the caller is the owner
      *  - Verify that total supply + quantity is less than maxSupply
@@ -262,15 +262,14 @@ contract ARTbres_Forets is
      */
     function mint(bytes memory data) external virtual onlyOwner {
         uint16 _nextId = totalSupplyId + 1;
-        require(_nextId <= MAXSUPPLY_V1, "Max supply exceeded");
+        require(_nextId <= MAX_SUPPLY_ID_V1, "Max supply exceeded");
         totalSupplyId = _nextId;
         _mint(_msgSender(), _nextId, TOTAL_SUPPLY_PER_ID, data);
     }
 
     /**
      * @dev Main mintBatch - external function
-     * @param _ids - array of number of tokenId to mint
-     * @param _amounts - array of number of each tokenId to mint
+     * @param _ids - number of tokenId to mint
      * @param data - data
      *  - Verify that the caller is the owner
      *  - Verify that total supply + quantity is less than maxSupply
@@ -280,10 +279,10 @@ contract ARTbres_Forets is
         uint16 _ids,
         bytes memory data
     ) external virtual onlyOwner {
-        uint16[] _idsBatch;
-        uint16[] _amountsBatch;
+        uint256[] memory _idsBatch;
+        uint256[] memory _amountsBatch;
         uint16 _nextId = totalSupplyId + _ids;
-        require(_nextId <= MAXSUPPLY_V1, "Max supply exceeded");
+        require(_nextId <= MAX_SUPPLY_ID_V1, "Max supply exceeded");
         totalSupplyId += _nextId;
         for (uint16 i = 1; i <= _ids; ++i) {
             _idsBatch[i] = totalSupplyId + i;
@@ -291,6 +290,16 @@ contract ARTbres_Forets is
         for (uint16 i = 1; i <= _ids; ++i) {
             _amountsBatch[i] = 10;
         }
-        _mintBatch(_msgSender(), _idsBatch, TOTAL_SUPPLY_PER_ID, data);
+        _mintBatch(_msgSender(), _idsBatch, _amountsBatch, data);
+    }
+
+    /**
+     * @dev Allow owner to withdraw any ether sent to this contract
+     *  - Verify that the caller is the owner
+     */
+    function withdrawEther() external virtual onlyOwner returns (bool success) {
+        (success, ) = payable(msg.sender).call{value: address(this).balance}(
+            ""
+        );
     }
 }
