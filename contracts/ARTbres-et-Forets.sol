@@ -95,7 +95,7 @@ contract ARTbres_Forets is
 {
     using StringsUpgradeable for uint256;
     uint8 private constant VERSION = 1;
-    uint16 private totalSupplyId;
+    uint16 public _totalSupplyId;
     uint16 private constant TOTAL_SUPPLY_PER_ID = 10;
     uint16 private constant MAX_TOTAL_SUPPLY = 10000;
     uint16 private constant MAX_TOTAL_SUPPLY_V1 = 1000;
@@ -128,62 +128,76 @@ contract ARTbres_Forets is
      * and stop existing when they are burned (`_burn`).
      */
     function _exists(uint256 _tokenId) internal view virtual returns (bool) {
-        return _tokenId <= totalSupplyId;
+        return _tokenId <= _totalSupplyId;
     }
 
     /**
      * @dev Return the contract's version
      */
-    function version() external view returns (uint8) {
+    function version() external pure returns (uint8) {
         return VERSION;
     }
 
     /**
      * @dev Return the collection's name
      */
-    function name() external view returns (string memory) {
+    function name() external pure returns (string memory) {
         return NAME;
     }
 
     /**
      * @dev Return the collection's symbol
      */
-    function symbol() external view returns (string memory) {
+    function symbol() external pure returns (string memory) {
         return SYMBOL;
     }
 
     /**
      * @dev Return the total maximum supply of the collection
      */
-    function maxSupply() public view returns (uint16) {
+    function maxTotalSupply() public pure returns (uint16) {
         return MAX_TOTAL_SUPPLY;
     }
 
     /**
-     * @dev Return the maximum supply of V1
+     * @dev Return the total maximum supply of collection's first version
      */
-    function maxSupplyId_V1() public view returns (uint16) {
+    function maxTotalSupplyV1() public pure returns (uint16) {
+        return MAX_TOTAL_SUPPLY_V1;
+    }
+
+    /**
+     * @dev Return the maximum supply of ID in Version 1
+     */
+    function maxSupplyId_V1() public pure returns (uint16) {
         return MAX_SUPPLY_ID_V1;
+    }
+
+    /**
+     * @dev Return the maximum supply of collection's ID
+     */
+    function maxSupplyId() public pure returns (uint16) {
+        return MAX_SUPPLY_ID;
     }
 
     /**
      * @dev Return the total supply
      */
     function totalSupply() public view returns (uint16) {
-        return (totalSupplyId * TOTAL_SUPPLY_PER_ID);
+        return (_totalSupplyId * TOTAL_SUPPLY_PER_ID);
     }
 
     /**
      * @dev Return the total tokenId supply
      */
     function totalSupplyId() public view returns (uint16) {
-        return totalSupplyId;
+        return _totalSupplyId;
     }
 
     /**
      * @dev Return the supply per tokenId
      */
-    function totalSupplyPerId() public view returns (uint16) {
+    function totalSupplyPerId() public pure returns (uint16) {
         return TOTAL_SUPPLY_PER_ID;
     }
 
@@ -261,9 +275,9 @@ contract ARTbres_Forets is
      *  - Mint the token
      */
     function mint(bytes memory data) external virtual onlyOwner {
-        uint16 _nextId = totalSupplyId + 1;
+        uint16 _nextId = totalSupplyId() + 1;
         require(_nextId <= MAX_SUPPLY_ID_V1, "Max supply exceeded");
-        totalSupplyId = _nextId;
+        _totalSupplyId = _nextId;
         _mint(_msgSender(), _nextId, TOTAL_SUPPLY_PER_ID, data);
     }
 
@@ -281,11 +295,11 @@ contract ARTbres_Forets is
     ) external virtual onlyOwner {
         uint256[] memory _idsBatch;
         uint256[] memory _amountsBatch;
-        uint16 _nextId = totalSupplyId + _ids;
+        uint16 _nextId = _totalSupplyId + _ids;
         require(_nextId <= MAX_SUPPLY_ID_V1, "Max supply exceeded");
-        totalSupplyId += _nextId;
+        _totalSupplyId += _nextId;
         for (uint16 i = 1; i <= _ids; ++i) {
-            _idsBatch[i] = totalSupplyId + i;
+            _idsBatch[i] = _totalSupplyId + i;
         }
         for (uint16 i = 1; i <= _ids; ++i) {
             _amountsBatch[i] = 10;
@@ -298,7 +312,7 @@ contract ARTbres_Forets is
      *  - Verify that the caller is the owner
      */
     function withdrawEther() external virtual onlyOwner returns (bool success) {
-        (success, ) = payable(msg.sender).call{value: address(this).balance}(
+        (success, ) = payable(_msgSender()).call{value: address(this).balance}(
             ""
         );
     }
