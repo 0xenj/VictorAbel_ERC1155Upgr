@@ -94,7 +94,6 @@ contract ARTbres_Forets is
     OwnableUpgradeable
 {
     using StringsUpgradeable for uint256;
-    uint8 private constant VERSION = 1;
     uint16 private mintCount;
     uint16 private constant TOTAL_SUPPLY_PER_ID = 10;
     uint16 private constant MAX_TOTAL_SUPPLY = 10000;
@@ -105,6 +104,7 @@ contract ARTbres_Forets is
     string private _contractURI;
     string private constant NAME = "Artbres & Forets Collection";
     string private constant SYMBOL = "ARTBRES&FORETS";
+    string private constant VERSION = "1";
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -134,7 +134,7 @@ contract ARTbres_Forets is
     /**
      * @dev Return the contract's version
      */
-    function version() external pure returns (uint8) {
+    function version() external pure returns (string memory) {
         return VERSION;
     }
 
