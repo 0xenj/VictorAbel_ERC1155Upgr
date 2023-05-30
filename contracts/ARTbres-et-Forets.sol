@@ -243,18 +243,11 @@ contract ARTbres_Forets is
     }
 
     /**
-     * @dev Disable uri() function
-     */
-    function uri(
-        uint256 tokenId
-    ) public view virtual override returns (string memory) {}
-
-    /**
      * @dev Return tokenURI
      */
-    function tokenUri(
+    function uri(
         uint256 _tokenId
-    ) external view virtual returns (string memory) {
+    ) external view virtual override returns (string memory) {
         require(_exists(_tokenId), "URI query for nonexistent token");
 
         return
@@ -275,11 +268,9 @@ contract ARTbres_Forets is
      *  - Mint the token
      */
     function mint(bytes memory data) external virtual onlyOwner {
-        uint16 _tokenId = totalSupplyId();
-        uint16 _nextId = _tokenId + 1;
-        require(_nextId <= MAX_SUPPLY_ID_V1 - 1, "Max supply exceeded");
-        _totalSupplyId = _nextId;
-        _mint(_msgSender(), _tokenId, TOTAL_SUPPLY_PER_ID, data);
+        require(_totalSupplyId < MAX_SUPPLY_ID_V1, "Max supply exceeded");
+        _mint(_msgSender(), _totalSupplyId, TOTAL_SUPPLY_PER_ID, data);
+        ++_totalSupplyId;
     }
 
     /**
@@ -294,18 +285,18 @@ contract ARTbres_Forets is
         uint16 _ids,
         bytes memory data
     ) external virtual onlyOwner {
-        uint256[] memory _idsBatch;
-        uint256[] memory _amountsBatch;
+        uint256[] memory _idsBatch = new uint256[](_ids);
+        uint256[] memory _amountsBatch = new uint256[](_ids);
         uint16 _nextId = _totalSupplyId + _ids;
-        require(_nextId <= MAX_SUPPLY_ID_V1 - 1, "Max supply exceeded");
-        _totalSupplyId += _nextId;
-        for (uint16 i = 1; i <= _ids; ++i) {
+        require(_nextId < MAX_SUPPLY_ID_V1, "Max supply exceeded");
+        for (uint16 i = 0; i < _ids; ++i) {
             _idsBatch[i] = _totalSupplyId + i;
         }
-        for (uint16 i = 1; i <= _ids; ++i) {
+        for (uint16 i = 0; i < _ids; ++i) {
             _amountsBatch[i] = 10;
         }
         _mintBatch(_msgSender(), _idsBatch, _amountsBatch, data);
+        _totalSupplyId = _nextId;
     }
 
     /**
