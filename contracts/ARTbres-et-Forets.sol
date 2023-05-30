@@ -95,7 +95,7 @@ contract ARTbres_Forets is
 {
     using StringsUpgradeable for uint256;
     uint8 private constant VERSION = 1;
-    uint16 public _totalSupplyId;
+    uint16 private mintCount;
     uint16 private constant TOTAL_SUPPLY_PER_ID = 10;
     uint16 private constant MAX_TOTAL_SUPPLY = 10000;
     uint16 private constant MAX_TOTAL_SUPPLY_V1 = 1000;
@@ -128,7 +128,7 @@ contract ARTbres_Forets is
      * and stop existing when they are burned (`_burn`).
      */
     function _exists(uint256 _tokenId) internal view virtual returns (bool) {
-        return _tokenId <= _totalSupplyId;
+        return _tokenId < mintCount;
     }
 
     /**
@@ -184,14 +184,14 @@ contract ARTbres_Forets is
      * @dev Return the total supply
      */
     function totalSupply() public view returns (uint16) {
-        return (_totalSupplyId * TOTAL_SUPPLY_PER_ID);
+        return (mintCount * TOTAL_SUPPLY_PER_ID);
     }
 
     /**
      * @dev Return the total tokenId supply
      */
-    function totalSupplyId() public view returns (uint16) {
-        return _totalSupplyId;
+    function totalSupplyId() external view returns (uint256) {
+        return mintCount;
     }
 
     /**
@@ -247,7 +247,7 @@ contract ARTbres_Forets is
      */
     function uri(
         uint256 _tokenId
-    ) external view virtual override returns (string memory) {
+    ) public view virtual override returns (string memory) {
         require(_exists(_tokenId), "URI query for nonexistent token");
 
         return
@@ -268,9 +268,9 @@ contract ARTbres_Forets is
      *  - Mint the token
      */
     function mint(bytes memory data) external virtual onlyOwner {
-        require(_totalSupplyId < MAX_SUPPLY_ID_V1, "Max supply exceeded");
-        _mint(_msgSender(), _totalSupplyId, TOTAL_SUPPLY_PER_ID, data);
-        ++_totalSupplyId;
+        require(mintCount < MAX_SUPPLY_ID_V1, "Max supply exceeded");
+        _mint(_msgSender(), mintCount, TOTAL_SUPPLY_PER_ID, data);
+        ++mintCount;
     }
 
     /**
@@ -287,16 +287,16 @@ contract ARTbres_Forets is
     ) external virtual onlyOwner {
         uint256[] memory _idsBatch = new uint256[](_ids);
         uint256[] memory _amountsBatch = new uint256[](_ids);
-        uint16 _nextId = _totalSupplyId + _ids;
+        uint16 _nextId = mintCount + _ids;
         require(_nextId < MAX_SUPPLY_ID_V1, "Max supply exceeded");
         for (uint16 i = 0; i < _ids; ++i) {
-            _idsBatch[i] = _totalSupplyId + i;
+            _idsBatch[i] = mintCount + i;
         }
         for (uint16 i = 0; i < _ids; ++i) {
             _amountsBatch[i] = 10;
         }
         _mintBatch(_msgSender(), _idsBatch, _amountsBatch, data);
-        _totalSupplyId = _nextId;
+        mintCount = _nextId;
     }
 
     /**
