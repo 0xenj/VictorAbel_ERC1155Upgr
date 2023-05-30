@@ -1,10 +1,10 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "./ARTbres&Foret.sol";
+import "./ARTbres-et-Forets.sol";
 
 /// @custom:security-contact enzo.jakobasch@gmail.com
-contract ARTbres_ForetsV2 is TestNFT {
+contract ARTbres_ForetsV2 is ARTbres_Forets {
     function mintBatch(
         uint256[] calldata _ids,
         uint256[] calldata _amounts,

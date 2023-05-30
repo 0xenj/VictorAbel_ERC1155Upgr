@@ -86,7 +86,7 @@ _______________ _╓╖╥@▓m╥╖~__________________________``"^^^"``_______
 ________________________ _______________________________________________________
 */
 
-/// @custom:security-contact enzo.jakobasch@gmail.com
+/// @custom:security-contact enzo@nftheorem.com
 contract ARTbres_Forets is
     Initializable,
     UUPSUpgradeable,
@@ -262,7 +262,7 @@ contract ARTbres_Forets is
      */
     function mint(bytes memory data) external virtual onlyOwner {
         uint256 _nextId = totalSupplyId + 1;
-        require(_nextId <= MAXSUPPLY_V1);
+        require(_nextId <= MAXSUPPLY_V1, "Max supply exceeded");
         totalSupplyId = _nextId;
         _mint(_msgSender(), _nextId, TOTAL_SUPPLY_PER_ID, data);
     }
@@ -278,12 +278,11 @@ contract ARTbres_Forets is
      */
     function mintBatch(
         uint256 _ids,
-        uint256 _amounts,
         bytes memory data
     ) external virtual onlyOwner {
-        require(totalSupplyId + 1 <= MAXSUPPLY_V1);
+        uint256 _nextId = totalSupplyId + _ids;
+        require(_nextId <= MAXSUPPLY_V1, "Max supply exceeded");
         totalSupplyId = _nextId;
-        require(+number <= maxSupply, "Max supply exceeded");
         totalSupply += number;
         _mintBatch(_msgSender(), _ids, TOTAL_SUPPLY_PER_ID, data);
     }

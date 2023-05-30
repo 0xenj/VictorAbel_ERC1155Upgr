@@ -1,14 +1,14 @@
 const { ethers, upgrades } = require("hardhat");
 
 async function main() {
-  const Contract = await ethers.getContractFactory("TestNFT");
+  const Contract = await ethers.getContractFactory("ARTbres-et-Forets");
   const contract = await upgrades.deployProxy(Contract, {
     initializer: "initialize",
     kind: "uups",
   });
 
   await contract.deployed();
-  console.log("OurUpgradeableNFT1 deployed to:", contract.address);
+  console.log("Contract deployed to:", contract.address);
 }
 
 main().catch((error) => {
