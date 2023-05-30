@@ -261,7 +261,7 @@ contract ARTbres_Forets is
      *  - Mint the token
      */
     function mint(bytes memory data) external virtual onlyOwner {
-        uint256 _nextId = totalSupplyId + 1;
+        uint16 _nextId = totalSupplyId + 1;
         require(_nextId <= MAXSUPPLY_V1, "Max supply exceeded");
         totalSupplyId = _nextId;
         _mint(_msgSender(), _nextId, TOTAL_SUPPLY_PER_ID, data);
@@ -277,13 +277,20 @@ contract ARTbres_Forets is
      *  - Mint tokens
      */
     function mintBatch(
-        uint256 _ids,
+        uint16 _ids,
         bytes memory data
     ) external virtual onlyOwner {
-        uint256 _nextId = totalSupplyId + _ids;
+        uint16[] _idsBatch;
+        uint16[] _amountsBatch;
+        uint16 _nextId = totalSupplyId + _ids;
         require(_nextId <= MAXSUPPLY_V1, "Max supply exceeded");
-        totalSupplyId = _nextId;
-        totalSupply += number;
-        _mintBatch(_msgSender(), _ids, TOTAL_SUPPLY_PER_ID, data);
+        totalSupplyId += _nextId;
+        for (uint16 i = 1; i <= _ids; ++i) {
+            _idsBatch[i] = totalSupplyId + i;
+        }
+        for (uint16 i = 1; i <= _ids; ++i) {
+            _amountsBatch[i] = 10;
+        }
+        _mintBatch(_msgSender(), _idsBatch, TOTAL_SUPPLY_PER_ID, data);
     }
 }
