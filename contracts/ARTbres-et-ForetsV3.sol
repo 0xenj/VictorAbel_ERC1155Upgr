@@ -83,7 +83,7 @@ _______________________________________ ___________ ___ _ _ __ __ __░░____�
 */
 
 /// @custom:security-contact enzo@nftheorem.com
-contract ARTbres_ForetsV2 is
+contract ARTbres_ForetsV3 is
     Initializable,
     UUPSUpgradeable,
     ERC1155Upgradeable,
@@ -104,6 +104,9 @@ contract ARTbres_ForetsV2 is
     uint16 private constant MAX_SUPPLY_ID_V2 = 200;
     uint16 private constant MAX_TOTAL_SUPPLY_V2 = 2000;
     string private constant VERSION2 = "2";
+    string private constant VERSION3 = "3";
+    uint16 private constant MAX_SUPPLY_ID_V3 = 300;
+    uint16 private constant MAX_TOTAL_SUPPLY_V3 = 3000;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -134,7 +137,7 @@ contract ARTbres_ForetsV2 is
      * @dev Return the contract's version
      */
     function version() external pure returns (string memory) {
-        return VERSION;
+        return VERSION3;
     }
 
     /**
@@ -162,14 +165,14 @@ contract ARTbres_ForetsV2 is
      * @dev Return the total maximum supply of collection's first version
      */
     function maxTotalSupplyV1() public pure returns (uint16) {
-        return MAX_TOTAL_SUPPLY_V1;
+        return MAX_TOTAL_SUPPLY_V3;
     }
 
     /**
      * @dev Return the maximum supply of ID in Version 1
      */
     function maxSupplyId_V1() public pure returns (uint16) {
-        return MAX_SUPPLY_ID_V1;
+        return MAX_SUPPLY_ID_V3;
     }
 
     /**
@@ -266,8 +269,8 @@ contract ARTbres_ForetsV2 is
      *  - Verify that total supply + quantity is less than maxSupply
      *  - Mint the token
      */
-    function mint(bytes memory data) external virtual onlyOwner {
-        require(mintCount < MAX_SUPPLY_ID_V2, "Max supply exceeded");
+    function mint(bytes memory data) external onlyOwner {
+        require(mintCount < MAX_SUPPLY_ID_V3, "Max supply exceeded");
         _mint(_msgSender(), mintCount, TOTAL_SUPPLY_PER_ID, data);
         ++mintCount;
     }
@@ -280,14 +283,11 @@ contract ARTbres_ForetsV2 is
      *  - Verify that total supply + quantity is less than maxSupply
      *  - Mint tokens
      */
-    function mintBatch(
-        uint16 _ids,
-        bytes memory data
-    ) external virtual onlyOwner {
+    function mintBatch(uint16 _ids, bytes memory data) external onlyOwner {
         uint256[] memory _idsBatch = new uint256[](_ids);
         uint256[] memory _amountsBatch = new uint256[](_ids);
         uint16 _nextId = mintCount + _ids;
-        require(_nextId < MAX_SUPPLY_ID_V2, "Max supply exceeded");
+        require(_nextId < MAX_SUPPLY_ID_V3, "Max supply exceeded");
         for (uint16 i = 0; i < _ids; ++i) {
             _idsBatch[i] = mintCount + i;
         }
@@ -298,19 +298,14 @@ contract ARTbres_ForetsV2 is
         mintCount = _nextId;
     }
 
-    function withdrawEther() external virtual onlyOwner returns (bool success) {
-        (success, ) = payable(_msgSender()).call{value: address(this).balance}(
-            ""
-        );
-    }
-
     /**
      * @dev Allow owner to withdraw any ether sent to this contract
      *  - Verify that the caller is the owner
      */
-
-    function version2() external pure returns (string memory) {
-        return VERSION2;
+    function withdrawEther() external virtual onlyOwner returns (bool success) {
+        (success, ) = payable(_msgSender()).call{value: address(this).balance}(
+            ""
+        );
     }
 
     /**
