@@ -18,7 +18,7 @@ module.exports = {
   },
   etherscan: {
     apiKey: {
-      polygonMumbai: process.env.API_KEY_POLYGON,
+      polygon: process.env.API_KEY_POLYGON,
     },
   },
   solidity: {
