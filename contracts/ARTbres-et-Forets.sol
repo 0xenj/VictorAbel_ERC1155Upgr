@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-/// @title: ARTbres&Foret
+/// @title: ARTbres&Forets
 /// @author: nftheorem.com
 
 import "@openzeppelin/contracts-upgradeable/token/ERC1155/ERC1155Upgradeable.sol";
@@ -99,7 +99,7 @@ contract ARTbres_Forets is
     string private _baseURI;
     string private _contractURI;
     string private constant NAME = "Artbres & Forets Collection";
-    string private constant SYMBOL = "ARTBRES&FORETS";
+    string private constant SYMBOL = "ARTBRES_FORETS";
     string private constant VERSION = "1";
 
     /// @custom:oz-upgrades-unsafe-allow constructor
@@ -284,7 +284,7 @@ contract ARTbres_Forets is
         uint256[] memory _idsBatch = new uint256[](_ids);
         uint256[] memory _amountsBatch = new uint256[](_ids);
         uint16 _nextId = mintCount + _ids;
-        require(_nextId < MAX_SUPPLY_ID_V1, "Max supply exceeded");
+        require(_nextId <= MAX_SUPPLY_ID_V1, "Max supply exceeded");
         for (uint16 i = 0; i < _ids; ++i) {
             _idsBatch[i] = mintCount + i;
         }
@@ -299,16 +299,9 @@ contract ARTbres_Forets is
      * @dev Allow owner to withdraw any ether sent to this contract
      *  - Verify that the caller is the owner
      */
-    function withdrawEther() external virtual onlyOwner returns (bool success) {
+    function withdraw() external virtual onlyOwner returns (bool success) {
         (success, ) = payable(_msgSender()).call{value: address(this).balance}(
             ""
         );
     }
-
-    /**
-     * @dev This empty reserved space is put in place to allow future versions to add new
-     * variables without shifting down storage in the inheritance chain.
-     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
-     */
-    uint256[47] private __gap;
 }
