@@ -190,7 +190,7 @@ contract ARTbres_Forets is
     /**
      * @dev Return the total tokenId supply
      */
-    function totalSupplyId() external view returns (uint256) {
+    function totalSupplyId() external view returns (uint16) {
         return mintCount;
     }
 
