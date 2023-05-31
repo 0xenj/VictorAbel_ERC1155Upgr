@@ -107,6 +107,9 @@ contract ARTbres_ForetsV3 is
     string private constant VERSION3 = "3";
     uint16 private constant MAX_SUPPLY_ID_V3 = 300;
     uint16 private constant MAX_TOTAL_SUPPLY_V3 = 3000;
+    string private constant VERSION4 = "4";
+    uint16 private constant MAX_SUPPLY_ID_V4 = 400;
+    uint16 private constant MAX_TOTAL_SUPPLY_V4 = 4000;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -137,7 +140,7 @@ contract ARTbres_ForetsV3 is
      * @dev Return the contract's version
      */
     function version() external pure returns (string memory) {
-        return VERSION3;
+        return VERSION4;
     }
 
     /**
@@ -164,15 +167,15 @@ contract ARTbres_ForetsV3 is
     /**
      * @dev Return the total maximum supply of collection's first version
      */
-    function maxTotalSupplyV1() public pure returns (uint16) {
-        return MAX_TOTAL_SUPPLY_V3;
+    function maxTotalSupplyV4() public pure returns (uint16) {
+        return MAX_TOTAL_SUPPLY_V4;
     }
 
     /**
      * @dev Return the maximum supply of ID in Version 1
      */
-    function maxSupplyId_V1() public pure returns (uint16) {
-        return MAX_SUPPLY_ID_V3;
+    function maxSupplyId_V4() public pure returns (uint16) {
+        return MAX_SUPPLY_ID_V4;
     }
 
     /**
