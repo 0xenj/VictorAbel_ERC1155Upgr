@@ -1,11 +1,11 @@
 const { ethers, upgrades } = require("hardhat");
 
-const PROXY = "0x67d2E67180016C59a4210cD53DbfEfB9b3197018";
+const PROXY = "0x401aE4c321efe65DB6c4b735932cA55fF0335e43";
 
 async function main() {
-  const TestNFTV2 = await ethers.getContractFactory("TestNFTV2");
+  const NewContract = await ethers.getContractFactory("ARTbres_ForetsV2");
   console.log("Upgrading Contract...");
-  contractInstance = await upgrades.upgradeProxy(PROXY, TestNFTV2);
+  contractInstance = await upgrades.upgradeProxy(PROXY, NewContract);
   console.log(`Contract upgraded successfully at ${contractInstance.address}`);
 }
 
